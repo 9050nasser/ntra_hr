@@ -1,7 +1,7 @@
 // Copyright (c) 2024, Mansy and contributors
 // For license information, please see license.txt
 
-frappe.query_reports["Attendance Monthly Report"] = {
+frappe.query_reports["Attendance Summary Report"] = {
 	filters: [
 		{
 			fieldname: "from_date",
@@ -24,31 +24,17 @@ frappe.query_reports["Attendance Monthly Report"] = {
 		// 	options: "Leave Type",
 		// },
 		{
-			fieldname: "employee",
-			label: __("Employee"),
+			fieldname: "from_emp",
+			label: __("From Employee"),
 			fieldtype: "Link",
 			options: "Employee",
-			reqd: 0
 		},
 		{
-			fieldname: "employee_name",
-			label: __("Employee Name"),
-			fieldtype: "Data",
-			read_only: 0,
+			fieldname: "to_emp",
+			label: __("To Employee"),
+			fieldtype: "Link",
+			options: "Employee",
 		},
-		// {
-		// 	fieldname: "status",
-		// 	label: __("Employee Status"),
-		// 	fieldtype: "Select",
-		// 	options: [
-		// 		"",
-		// 		{ value: "Active", label: __("Active") },
-		// 		{ value: "Inactive", label: __("Inactive") },
-		// 		{ value: "Suspended", label: __("Suspended") },
-		// 		{ value: "Left", label: __("Left") },
-		// 	],
-		// 	default: "Active",
-		// },
 		{
 			label: __("Company"),
 			fieldname: "company",
@@ -56,23 +42,6 @@ frappe.query_reports["Attendance Monthly Report"] = {
 			options: "Company",
 			default: frappe.defaults.get_user_default("Company"),
 		},
-		// {
-		// 	fieldname: "department",
-		// 	label: __("Department"),
-		// 	fieldtype: "Link",
-		// 	options: "Department",
-		// },
-		// {
-		// 	fieldname: "transaction_type",
-		// 	label: __("Transaction Type"),
-		// 	fieldtype: "Select",
-		// 	options: ["", "Leave Allocation", "Leave Application", "Leave Encashment"],
-		// },
-		// {
-		// 	fieldname: "transaction_name",
-		// 	label: __("Transaction Name"),
-		// 	fieldtype: "Data",
-		// },
 	],
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
@@ -104,27 +73,7 @@ frappe.query_reports["Attendance Monthly Report"] = {
 				frappe.query_report.set_filter_value("from_date", data.message[0].from_date);
 				frappe.query_report.set_filter_value("to_date", data.message[0].to_date);
 			},
-
-		});
-
-	},
-	onload: () => {
-
-		frappe.call({
-			type: "GET",
-			method: "frappe.client.get_value",
-			args: {
-				'doctype': "Employee",
-				'filters': { 'name': frappe.query_report.get_filter_value("employee") },
-				'fieldname': ['employee_name']
-			},
-			async: true,
-			freeze: true,
-			callback: (data) => {
-				console.log(data)
-				frappe.query_report.set_filter_value("employee_name", data.message.employee_name);
-			},
 		});
 	},
-
 };
+
