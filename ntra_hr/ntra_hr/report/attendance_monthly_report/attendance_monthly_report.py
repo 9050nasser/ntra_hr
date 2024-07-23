@@ -299,7 +299,7 @@ def calculate_hasala(employee, check_out, check_in, leave_type):
     shift_from = shift_type2.start_time
     shift_to = shift_type2.end_time
     if convert_checkin_to_time(check_out) > shift_to and is_hasala == 1:
-        return convert_checkin_to_time(check_out) - shift_to
+        return convert_checkin_to_time(check_out) - shift_to - timedelta(hours=1)
     else:
         return f"{0:02d}:{0:02d}:{0:02d}"
 
