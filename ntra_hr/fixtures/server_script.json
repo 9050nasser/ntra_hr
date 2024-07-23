@@ -17,5 +17,24 @@
   "reference_doctype": "Attendance",
   "script": "# Fetch the shift assignment for the given employee and attendance date\r\nshift = frappe.db.get_all(\r\n    \"Shift Assignment\",\r\n    filters={\r\n        \"employee\": doc.employee,\r\n        \"docstatus\": 1,\r\n        \"start_date\": [\"<=\", doc.attendance_date],\r\n        \"end_date\": [\">=\", doc.attendance_date]\r\n    },\r\n    fields=[\"shift_type\"]\r\n)\r\n\r\n# If the document does not have a shift assigned yet and a shift assignment is found, assign the shift type\r\nif not doc.shift and shift:\r\n    doc.shift = shift[0].shift_type\r\n",
   "script_type": "DocType Event"
+ },
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "cron_format": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "After Save (Submitted Document)",
+  "enable_rate_limit": 0,
+  "event_frequency": "All",
+  "modified": "2024-07-23 03:39:54.093069",
+  "module": "Ntra Hr",
+  "name": "get shift2",
+  "rate_limit_count": 5,
+  "rate_limit_seconds": 86400,
+  "reference_doctype": "Attendance",
+  "script": "# Fetch the shift assignment for the given employee and attendance date\r\nshift = frappe.db.get_all(\r\n    \"Shift Assignment\",\r\n    filters={\r\n        \"employee\": doc.employee,\r\n        \"docstatus\": 1,\r\n        \"start_date\": [\"<=\", doc.attendance_date],\r\n        \"end_date\": [\">=\", doc.attendance_date]\r\n    },\r\n    fields=[\"shift_type\"]\r\n)\r\n\r\n# If the document does not have a shift assigned yet and a shift assignment is found, assign the shift type\r\nif not doc.shift and shift:\r\n    doc.shift = shift[0].shift_type\r\n",
+  "script_type": "DocType Event"
  }
 ]

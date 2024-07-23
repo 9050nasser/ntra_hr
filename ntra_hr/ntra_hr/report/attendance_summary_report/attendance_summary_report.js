@@ -28,12 +28,14 @@ frappe.query_reports["Attendance Summary Report"] = {
 			label: __("From Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			reqd: 1,
 		},
 		{
 			fieldname: "to_emp",
 			label: __("To Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			reqd: 1,
 		},
 		{
 			label: __("Company"),
@@ -45,10 +47,11 @@ frappe.query_reports["Attendance Summary Report"] = {
 	],
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
-		if (column.fieldname === "leaves") {
-			if (data?.leaves < 0) value = `<span style='color:red!important'>${value}</span>`;
+		if (column.fieldname === "att_perc") {
+			if (data?.att_perc > 100) value = `<span style='color:red!important; font-weight: bolder;'>${value}</span>`;
 			else value = `<span style='color:green!important'>${value}</span>`;
 		}
+		value = `<span style='text-align:center;'>${value}</span>`
 		return value;
 	},
 	onload: () => {
