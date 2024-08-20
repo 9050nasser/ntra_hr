@@ -28,14 +28,7 @@ frappe.query_reports["Attendance Monthly"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
-			reqd: 1
-		},
-		{
-			fieldname: "employee_name",
-			label: __("Employee Name"),
-			fieldtype: "Data",
-			read_only: 1,
-			reqd: 1
+			reqd: 0
 		},
 		// {
 		// 	fieldname: "status",
@@ -77,35 +70,55 @@ frappe.query_reports["Attendance Monthly"] = {
 	],
 	formatter: (value, row, column, data, default_formatter) => {
 		value = default_formatter(value, row, column, data);
-		if (column.fieldname === "leaves") {
-			if (data?.leaves < 0) value = `<span style='color:red!important'>${value}</span>`;
+		if (column.fieldname === "leave_type") {
+			if (data.leave_type) value = `<span style='--text-color: red; font-weight: bolder;'>${value}</span>`;
 			else value = `<span style='color:green!important'>${value}</span>`;
 		}
 		return value;
 	},
-	onload: () => {
-		if (
-			frappe.query_report.get_filter_value("from_date") &&
-			frappe.query_report.get_filter_value("to_date")
-		)
-			return;
+	// onload: () => {
+	// 	if (
+	// 		frappe.query_report.get_filter_value("from_date") &&
+	// 		frappe.query_report.get_filter_value("to_date")
+	// 	)
+	// 		return;
 
-		const today = frappe.datetime.now_date();
+	// 	const today = frappe.datetime.now_date();
 
-		frappe.call({
-			type: "GET",
-			method: "hrms.hr.utils.get_leave_period",
-			args: {
-				from_date: today,
-				to_date: today,
-				company: frappe.defaults.get_user_default("Company"),
-			},
-			freeze: true,
-			callback: (data) => {
-				frappe.query_report.set_filter_value("from_date", data.message[0].from_date);
-				frappe.query_report.set_filter_value("to_date", data.message[0].to_date);
-			},
-		});
-	},
+	// 	frappe.call({
+	// 		type: "GET",
+	// 		method: "hrms.hr.utils.get_leave_period",
+	// 		args: {
+	// 			from_date: today,
+	// 			to_date: today,
+	// 			company: frappe.defaults.get_user_default("Company"),
+	// 		},
+	// 		freeze: true,
+	// 		callback: (data) => {
+	// 			frappe.query_report.set_filter_value("from_date", data.message[0].from_date);
+	// 			frappe.query_report.set_filter_value("to_date", data.message[0].to_date);
+	// 		},
+
+	// 	});
+
+	// },
+	// onload: () => {
+
+	// 	frappe.call({
+	// 		type: "GET",
+	// 		method: "frappe.client.get_value",
+	// 		args: {
+	// 			'doctype': "Employee",
+	// 			'filters': { 'name': frappe.query_report.get_filter_value("employee") },
+	// 			'fieldname': ['employee_name']
+	// 		},
+	// 		async: true,
+	// 		freeze: true,
+	// 		callback: (data) => {
+	// 			console.log(data)
+	// 			frappe.query_report.set_filter_value("employee_name", data.message.employee_name);
+	// 		},
+	// 	});
+	// },
+
 };
-

@@ -16,6 +16,7 @@ def trigger_employee_checkin_validate():
     return "Employee Checkin Validated"
 
 
+
 @frappe.whitelist()
 def trigger_leave_application_validate_submit():
     leave_application = frappe.db.get_all("Leave Application", filters={"docstatus": ["!=", "1"]}, fields=["name", "employee"])
@@ -26,6 +27,7 @@ def trigger_leave_application_validate_submit():
             doc = frappe.get_doc("Leave Application", checkin.name)
             # generate random string
             doc.description = frappe.generate_hash(length=8)
+            doc.status = "Approved"
             doc.save()
             doc.submit()
             frappe.db.commit()
@@ -33,3 +35,35 @@ def trigger_leave_application_validate_submit():
         except Exception as e:
             print(f"Error: {e}")
     return "Leave Application Validated"
+
+@frappe.whitelist()
+def cancel_attendance():
+    leave_application = frappe.db.get_all("Attendance", filters={"status": ["!=", "On Leave"], "docstatus":1}, fields=["name", "employee"])
+    for name in leave_application:
+        try:
+            doc = frappe.get_doc("Attendance", name.name)
+            # generate random string
+            doc.cancel()
+            # doc.delete()
+            frappe.db.commit()
+            print(f"Cancel Attendance: {doc.name}")
+        except Exception as e:
+            print(f"Error: {e}")
+    return "Attendance Cancelled"
+
+@frappe.whitelist()
+def delete_attendance():
+    leave_application = frappe.db.get_all("Attendance", filters={"status": ["!=", "On Leave"], "docstatus":2}, fields=["name", "employee"])
+    for name in leave_application:
+        try:
+            doc = frappe.get_doc("Attendance", name.name)
+            # generate random string
+            # doc.cancel()
+            doc.delete()
+            frappe.db.commit()
+            print(f"Delete Attendance: {doc.name}")
+        except Exception as e:
+            print(f"Error: {e} {doc.name}")
+    return "Attendance Deleted"
+
+    

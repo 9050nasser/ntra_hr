@@ -1,0 +1,163 @@
+<h2 class="text-center">{%= __("تقرير الحضور والإنصراف") %}</h2>
+<h5 class="text-center">
+    {% if (filters.from_date) { %}
+    من تاريخ : {%= filters.from_date %}
+    {% } %}
+
+    {% if (filters.to_date) { %}
+    الى تاريخ : {%= filters.to_date %}
+    {% } %}
+</h5>
+
+<h6 class="text-center">
+    {% if (filters.tax_id) { %}
+    {%= __("Tax Id: ")%} {%= filters.tax_id %}
+    {% } %}
+</h6>
+
+<table id="employee" border="1">
+    <thead>
+        <tr>
+            <th>{%= __("Employee Number") %}</th>
+            <th>{%= __("Name") %}</th>
+            <th>{%= __("Department") %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <td>{%= filters.employee %}</td>
+        <td>{%= data[0].employee_name %}</td>
+        <td>{%= data[0].department %}</td>
+    </tbody>
+</table>
+
+<style>
+    #employee {
+        width: 100%;
+        text-align: center;
+        font-size: large;
+        font-weight: bold;
+        border: 1px solid black;
+        direction: rtl;
+    }
+
+    #employee tr {
+        background-color: whitesmoke;
+        text-align: center;
+    }
+
+    #employee th {
+        text-align: center;
+    }
+</style>
+<hr>
+<div class="main">
+    <div>
+        <table class="totals" border="1">
+            <tbody>
+                <tr>
+                    <td>{%= data[0].adwh %}</td>
+                    <td>أيام العمل بدون الأجازات الغير الرسمية</td>
+                </tr>
+                <tr>
+                    <td>{%= data[0].act %}</td>
+                    <td>مجموع الساعات المطلوبة</td>
+                </tr>
+                <tr>
+                    <td>{%= data[0].att_days %}</td>
+                    <td>أيام الحضور</td>
+                </tr>
+                <tr>
+                    <td>{%= data[0].th %}</td>
+                    <td>مجموع الساعات الفعلية</td>
+                </tr>
+                <tr>
+                    <td>{%= data[0].total_mohtsba %}</td>
+                    <td>مجموع ساعات النظام المحتسبة</td>
+                </tr>
+                <tr>
+                    <td>{%= data[0].percent %} %</td>
+                    <td>نسبة الحضور</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered data">
+            <thead>
+                <tr>
+                    <th colspan="12">تفاصيل الحضور</th>
+                </tr>
+                <tr>
+                    <th>{%= __("Sr") %}</th>
+                    <th>{%= __("Attendance Date") %}</th>
+                    <th>{%= __("Check In") %}</th>
+                    <th>{%= __("Check Out") %}</th>
+                    <th>{%= __("Working Hours") %}</th>
+                    <th>{%= __("Valid In/Valid Out") %}</th>
+                    <th>{%= __("Leave Type") %}</th>
+                    <th>{%= __("Holiday List") %}</th>
+                    <th>{%= __("Hasala") %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for(var i=0, l=data.length; i<l; i++) { %} <tr>
+
+                    <td>{%= i + 1 %}</td>
+                    <td>{%= data[i].attendance_date %}</td>
+                    <td>{%= data[i].check_in %}</td>
+                    <td>{%= data[i].check_out %}</td>
+                    <td>{%= data[i].working_hours %}</td>
+                    <td>{%= data[i].valid_in_valid_out %}</td>
+                    <td>{%= data[i].leave_type %}</td>
+                    <td>{%= data[i].holiday_list %}</td>
+                    <td>{%= data[i].hasala %}</td>
+                    </tr>
+                    {% } %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<p class="text-right text-muted">Printed On {%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}
+</p>
+<script>
+    console.log("test2 data:", test2);
+</script>
+<style>
+    .main {
+        display: flex;
+        gap: 10px;
+    }
+
+    .totals {
+        margin-top: 21px;
+        direction: ltr;
+        margin-right: 100px;
+    }
+
+    .totals,
+    .data {
+
+        width: 100%;
+        text-align: center;
+        font-size: small;
+        font-weight: bold;
+        border: 1px solid black;
+
+    }
+
+    .data {
+        font-size: small;
+    }
+
+    .totals tr,
+    .data tr {
+        background-color: whitesmoke;
+        text-align: center;
+    }
+
+    .totals th,
+    .data th {
+        text-align: center;
+    }
+</style>

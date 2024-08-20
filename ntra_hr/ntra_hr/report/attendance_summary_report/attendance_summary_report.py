@@ -51,7 +51,8 @@ def get_data(filters: Filters) -> list[dict]:
         SUM(att.working_hours) as actual_working_hours
 		FROM `tabEmployee` emp
         LEFT JOIN `tabAttendance` att ON emp.name = att.employee
-		WHERE emp.employee BETWEEN {from_emp} AND {to_emp}
+		WHERE emp.employee BETWEEN '{from_emp}' AND '{to_emp}'
+        AND att.attendance_date BETWEEN '{datef}' AND '{datet}'
         AND att.docstatus = 1
         AND emp.status = "Active"
         GROUP BY att.employee
