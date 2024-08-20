@@ -137,9 +137,9 @@ ORDER BY combined_results.attendance_date, combined_results.sort_order;
     total_mohtsba = timedelta()
     act = timedelta()
     for row in result:
-        shift = frappe.db.get_value("Shift Type", row.shift, ["start_time", "end_time", "name"], as_dict=1)
+        shift = frappe.db.get_value("Shift Type", row.shift, ["custom_shift_hours", "name"], as_dict=1)
         leave_type_duplication = frappe.db.get_value("Leave Type", row.leave_type, "custom_allow_duplication")
-        shift_duration = (shift.end_time - shift.start_time) - timedelta(hours=1) if leave_type_duplication == 0 or not row.leave_type else timedelta(hours=0)
+        shift_duration = shift.custom_shift_hours if leave_type_duplication == 0 or not row.leave_type else timedelta(hours=0)
         shift_row = row.shift if row.leave_type is None else ""
         check_in_time = row.check_in
         check_out_time = row.check_out
@@ -172,8 +172,8 @@ ORDER BY combined_results.attendance_date, combined_results.sort_order;
         item["department"] = frappe.db.get_value("Employee", employee, "department")
         item["total_mohtsba"] = total_mohtsba
         item["act"] = act
-        # item["adwh"] = adwh(employee, datef, datet)
-        item["adwh"] = abs(days_between_dates(datef, datet) - get_holidays_days_count(holiday_list, datef, datet))
+        item["adwh"] = adwh(employee, datef, datet)
+        # item["adwh"] = abs(days_between_dates(datef, datet) - get_holidays_days_count(holiday_list, datef, datet))
         item["att_days"] = att_days(employee, datef, datet)
         item["percent"] = percent(total_mohtsba, act)
     return response
@@ -205,6 +205,8 @@ def get_working_hours(employee, check_in, check_out, leave_app=None, shift=None,
 
     if leave_app:
         return timedelta(hours=0)
+    elif checkout > timedelta(hours=7):
+        return shift_type2.custom_shift_hours
     elif checkin == timedelta(hours=0) or checkout == timedelta(hours=0):
         return timedelta(hours=0)
     elif checkin == timedelta(hours=0):
@@ -215,10 +217,14 @@ def get_working_hours(employee, check_in, check_out, leave_app=None, shift=None,
         return timedelta(hours=7, minutes=0, seconds=0)
     elif not shift and actual_in and actual_out:
         return checkout - checkin
+    elif not leave_app:
+        return shift_type2.custom_shift_hours
     
         
     if actual_in > timedelta(hours=9) and shift=="شيفت 5 ساعات عمل رمضان":
         return shift_to - actual_in
+    elif checkout > timedelta(hours=7):
+        return shift_type2.custom_shift_hours
     elif shift_to - shift_from > timedelta(hours=5) and shift=="شيفت 5 ساعات عمل رمضان":
         return timedelta(hours=5, minutes=0, seconds=0)
     elif leave_app:
@@ -273,6 +279,7 @@ def days_between_dates(datef, datet):
 
     # Get the number of days
     days_between = delta.days +1
+    print(days_between)
     return days_between
 
 def get_holidays_days_count(holiday_list, datef, datet):
@@ -282,4 +289,6 @@ def get_holidays_days_count(holiday_list, datef, datet):
             where parent=%s 
             and holiday_date between %s and %s
         """, (holiday_list, datef, datet), as_dict=True)
+    print(holiday_list)
+    print(count[0].count)
     return count[0].count

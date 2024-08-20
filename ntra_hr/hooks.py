@@ -117,7 +117,8 @@ app_license = "mit"
 override_doctype_class = {
     "Attendance": "ntra_hr.overrides.custom_attendance.CustomAttendance",
     "Employee Checkin": "ntra_hr.overrides.custom_employee_checkin.CustomEmployeeCheckin",
-    "Shift Type": "ntra_hr.overrides.custom_shift_type.CustomShiftType"
+    "Shift Type": "ntra_hr.overrides.custom_shift_type.CustomShiftType",
+    "Report": "ntra_hr.overrides.custom_report.CustomReport"
 }
 
 # Document Events
