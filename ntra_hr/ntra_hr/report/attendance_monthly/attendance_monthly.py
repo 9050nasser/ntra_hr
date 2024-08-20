@@ -20,7 +20,7 @@ def execute(filters: Filters = None) -> tuple:
 def get_columns() -> list[dict]:
     return [
         {"label": _("Attendance"), "fieldname": "attendance", "fieldtype": "Link", "options": "Attendance", "width": 180, "hidden": 1},
-        {"label": _("Leave Application"), "fieldname": "leave_app", "fieldtype": "Link", "options": "Leave Application", "width": 140, "hidden": 0},
+        {"label": _("Leave Application"), "fieldname": "leave_app", "fieldtype": "Link", "options": "Leave Application", "width": 140, "hidden": 1},
         {"label": _("Attendance Date"), "fieldname": "attendance_date", "fieldtype": "Date", "width": 120},
         {"label": _("Employee"), "fieldname": "employee", "fieldtype": "Link", "options": "Employee", "width": 240, "reqd": 1, "hidden": 1},
         {"label": _("Employee Name"), "fieldname": "employee_name", "fieldtype": "Data", "hidden": 1},
